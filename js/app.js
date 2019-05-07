@@ -8,7 +8,8 @@ const t0=performance.now();
  let cardsOpenArray = [];
  let cardsMatchArray = [];
 
- 
+ let cardsMatchNumber = 7; // 0 is a position
+
 
 /*
  * Display the cards on the page
@@ -56,13 +57,18 @@ function suffleCards(array) {
       
 }
 
-
-
+//Restart Button
 const restart = document.getElementById("restart");
 restart.addEventListener("click", function(){
+    const modal = document.querySelector(".modal-content");
+    modal.classList.toggle("hide", true);
+    modal.classList.toggle("show", false);
+    movements = 0; 
     shuffle(cardsArray);
     suffleCards(cardsArray); 
-    eventCards(); 
+    eventCards();
+    cardsMatchArray.splice(0, cardsMatchNumber+1);
+    
 });
 
 
@@ -86,11 +92,13 @@ function cardClean() {
 }
 
 
-
+let movements = 0;
 function cardOpenMatch(thisItem) {
-
-    console.log(cardsMatchArray.length);
-    if (cardsMatchArray.length < 8) {
+    console.log("arrayMatch:" + cardsMatchArray );
+    console.log("arrayMatchLength:" + cardsMatchArray.length );
+    console.log("arrayOpen:" + cardsOpenArray );
+    console.log("arrayOpenLength:" + cardsOpenArray.length );
+    if ( cardsMatchArray.length  <= cardsMatchNumber ) {
 
         const cardItem=thisItem.querySelector(".fa");
         const cardItemClass= cardItem.classList[1].split("-")[1];
@@ -102,9 +110,12 @@ function cardOpenMatch(thisItem) {
 
         thisItem.classList.toggle("show", true);
         thisItem.classList.toggle("open", true); 
-
+        
+        //Pair of Cards Actions
         if ( cardsOpenArray.length === 2)  {
-
+            
+            movements += 1;
+            console.log("movements:"+ movements);
             const cardsMatch = document.querySelectorAll(".open");
              if ( cardsOpenArray[0] === cardsOpenArray[1] ) {               
                     console.log("match!");   
@@ -115,14 +126,25 @@ function cardOpenMatch(thisItem) {
             } else {
                     console.log("not match!");            
             }
+            cardsOpenArray.splice(0, 2);
 
-            cardsOpenArray.pop(cardsOpenArray[0]);
-            cardsOpenArray.pop(cardsOpenArray[1]);
         }
 
 
-    } 
+        //Open the Congratulations PopUp
+        if ( cardsMatchArray.length  === cardsMatchNumber ) {
+            console.log("wines in:" + movements);
+          
+            setTimeout(function() {
+                const modal = document.querySelector(".modal-content");
+                modal.classList.toggle("hide", false);
+                modal.classList.toggle("show", true);
+                const moves = document.querySelector(".moves");
+                moves.textContent = movements;               
+            }, 3000); 
 
+        }
+    }
 }
 
 function eventCards() {
@@ -134,13 +156,9 @@ function eventCards() {
     }
 }
 
-
-console.log(cardsArray);
 shuffle(cardsArray);
 suffleCards(cardsArray); 
 eventCards(); 
-
-
 
 const t1=performance.now();
 console.log("Code Time "+ (t1-t0) + ' milliseconds');
