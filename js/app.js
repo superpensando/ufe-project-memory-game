@@ -94,9 +94,7 @@ function cardClean() {
 
 let movements = 0;
 function cardOpenMatch(thisItem) {
-    console.log("arrayMatch:" + cardsMatchArray );
     console.log("arrayMatchLength:" + cardsMatchArray.length );
-    console.log("arrayOpen:" + cardsOpenArray );
     console.log("arrayOpenLength:" + cardsOpenArray.length );
     if ( cardsMatchArray.length  <= cardsMatchNumber ) {
 
@@ -159,6 +157,7 @@ function eventCards() {
 shuffle(cardsArray);
 suffleCards(cardsArray); 
 eventCards(); 
+
 
 const t1=performance.now();
 console.log("Code Time "+ (t1-t0) + ' milliseconds');
