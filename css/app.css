@@ -100,7 +100,7 @@ h2 {
 .score-panel {
     text-align: left;
     width: 345px;
-    margin-bottom: 10px;
+    margin:20px 10px; 
 }
 
 .score-panel .stars {
@@ -109,6 +109,9 @@ h2 {
     display: inline-block;
     margin: 0 5px 0 0;
     color:#F1AB00;
+}
+.score-panel .offstars {
+    color:#ccc;
 }
 
 .score-panel .stars li {

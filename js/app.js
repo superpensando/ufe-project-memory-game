@@ -1,5 +1,3 @@
-const t0=performance.now();
-
 /*
  * Create a list that holds all of your cards
  */
@@ -83,6 +81,10 @@ restart.addEventListener("click", function(){
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+let movements = 0;
+let click = 0; 
+let t0 = 0; 
+
 function cardClean() {
     const deckCards = document.querySelectorAll(".card");
     for (const deckCard of deckCards) {
@@ -91,20 +93,18 @@ function cardClean() {
     }
 }
 
-
-let movements = 0;
-function cardOpenMatch(thisItem) {
-
-    //console.log("arrayMatchLength0:" + cardsMatchArray.length );
-    //console.log("arrayOpenLength0:" + cardsOpenArray.length );
-
-    if ( cardsMatchArray.length  <= cardsMatchNumber ) {
-        
+function cardOpenMatch(thisItem,event) {
     
+    if ( cardsMatchArray.length  <= cardsMatchNumber ) {
+            
         //Add Open Cards to an OpenArray 
         //Add open/show class to HTML (begins with class :not(.open))
         if (!thisItem.classList.contains("open")) {
-
+            
+            click += 1;
+            if (click === 1) {
+                t0 = performance.now();
+            }
             //Remove open/show class to HTML
             if (( cardsOpenArray.length === 0) && (movements > 0 )) {
                 cardClean();
@@ -114,17 +114,13 @@ function cardOpenMatch(thisItem) {
             thisItem.classList.add("show");
             const cardItemClass= thisItem.children[0].classList[1];
             cardsOpenArray.push(cardItemClass);
-            //console.log(cardsOpenArray);
-            //console.log("arrayOpenLength1:" + cardsOpenArray.length );
 
             //Pair of Cards Actions
             //Match or NotMatch into the Open Cards Array 
             //If Match, Add Card to an Match Array
-
             if ( cardsOpenArray.length === 2)  {
                 
                 movements += 1;
-                console.log("movements:"+ movements);               
                 if ( cardsOpenArray[0] === cardsOpenArray[1] ) {               
                         //console.log("match!");
                         const cardsMatch = document.querySelectorAll(".open");   
@@ -146,15 +142,37 @@ function cardOpenMatch(thisItem) {
    
         //Open the Congratulations PopUp
         if ( cardsMatchArray.length  === cardsMatchNumber ) {
-            console.log("wines in:" + movements);
-          
+         
             setTimeout(function() {
+
                 const modal = document.querySelector(".modal-content");
                 modal.classList.toggle("hide", false);
-                modal.classList.toggle("show", true);
+
+                //Moves
                 const moves = document.querySelector(".moves");
-                moves.textContent = movements;               
-            }, 3000); 
+                moves.classList.toggle("hide", false);
+                moves.textContent = movements; 
+                
+                //Timer
+                const t1=performance.now();
+                const timer = document.querySelector(".timer");
+                timer.textContent = ((t1-t0)/1000).toFixed(2) + " s"; 
+                
+                //Rating 
+                if ( movements > 20 ) {
+                    const rating3 = document.querySelector(".fa-star-three");
+                    rating3.classList.add("offstars");
+                } 
+                if ( movements > 30 ) {
+                    const rating2 = document.querySelector(".fa-star-two");
+                    rating2.classList.add("offstars");
+                } 
+                if (movements > 40) {
+                    const rating1 = document.querySelector(".fa-star-one");
+                    rating1.classList.add("offstars");
+                }   
+                          
+            }, 2000); 
 
         }
     }
@@ -164,7 +182,7 @@ function eventCards() {
     const deckCards = document.querySelectorAll(".card");
     for (const deckCard of deckCards) {  
         deckCard.addEventListener('click', function(event) {
-            cardOpenMatch(this);
+            cardOpenMatch(this,event);
         });
     }
 }
@@ -172,7 +190,3 @@ function eventCards() {
 shuffle(cardsArray);
 suffleCards(cardsArray); 
 eventCards(); 
-
-
-const t1=performance.now();
-console.log("Code Time "+ (t1-t0) + ' milliseconds');
