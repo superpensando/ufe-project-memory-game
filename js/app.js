@@ -144,7 +144,6 @@ function cardOpenMatch(thisItem) {
         }
 
    
-        console.log(cardsMatchArray.length);
         //Open the Congratulations PopUp
         if ( cardsMatchArray.length  === cardsMatchNumber ) {
             console.log("wines in:" + movements);
