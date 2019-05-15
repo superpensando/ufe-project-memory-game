@@ -4,11 +4,11 @@ const t0=performance.now();
  * Create a list that holds all of your cards
  */
 
- const cardsArray =  ['diamond', 'paper-plane-o', 'anchor', 'bolt', 'cube', 'anchor', 'leaf', 'bicycle', 'diamond', 'bomb', 'leaf', 'bomb', 'bolt', 'bicycle', 'paper-plane-o', 'cube'];
+ const cardsArray =  ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-cube', 'fa-anchor', 'fa-leaf', 'fa-bicycle', 'fa-diamond', 'fa-bomb', 'fa-leaf', 'fa-bomb', 'fa-bolt', 'fa-bicycle', 'fa-paper-plane-o', 'fa-cube'];
  let cardsOpenArray = [];
  let cardsMatchArray = [];
 
- let cardsMatchNumber = 7; // 0 is a position
+ let cardsMatchNumber = 8; 
 
 
 /*
@@ -48,7 +48,7 @@ function suffleCards(array) {
         const newCard = document.createElement('li');
         newCard.className = "card";
         const newIcon = document.createElement('i'); 
-        newIcon.className =" fa fa-" + item;      
+        newIcon.className =" fa " + item;      
         newCard.appendChild(newIcon); 
         fragment.appendChild(newCard);      
     }
@@ -86,49 +86,65 @@ restart.addEventListener("click", function(){
 function cardClean() {
     const deckCards = document.querySelectorAll(".card");
     for (const deckCard of deckCards) {
-        deckCard.classList.toggle("show", false);
-        deckCard.classList.toggle("open", false);  
+        deckCard.classList.remove("show");
+        deckCard.classList.remove("open");  
     }
 }
 
 
 let movements = 0;
 function cardOpenMatch(thisItem) {
-    console.log("arrayMatchLength:" + cardsMatchArray.length );
-    console.log("arrayOpenLength:" + cardsOpenArray.length );
+
+    //console.log("arrayMatchLength0:" + cardsMatchArray.length );
+    //console.log("arrayOpenLength0:" + cardsOpenArray.length );
+
     if ( cardsMatchArray.length  <= cardsMatchNumber ) {
-
-        const cardItem=thisItem.querySelector(".fa");
-        const cardItemClass= cardItem.classList[1].split("-")[1];
-        cardsOpenArray.push(cardItemClass);
-
-        if ( cardsOpenArray.length === 1)  {
-            cardClean();
-        }
-
-        thisItem.classList.toggle("show", true);
-        thisItem.classList.toggle("open", true); 
         
-        //Pair of Cards Actions
-        if ( cardsOpenArray.length === 2)  {
-            
-            movements += 1;
-            console.log("movements:"+ movements);
-            const cardsMatch = document.querySelectorAll(".open");
-             if ( cardsOpenArray[0] === cardsOpenArray[1] ) {               
-                    console.log("match!");   
-                    for (cardMatch of cardsMatch) {
-                        cardMatch.classList.toggle("match", true);
-                    } 
-                    cardsMatchArray.push(cardsOpenArray[0]);                 
-            } else {
-                    console.log("not match!");            
-            }
-            cardsOpenArray.splice(0, 2);
+    
+        //Add Open Cards to an OpenArray 
+        //Add open/show class to HTML (begins with class :not(.open))
+        if (!thisItem.classList.contains("open")) {
 
+            //Remove open/show class to HTML
+            if (( cardsOpenArray.length === 0) && (movements > 0 )) {
+                cardClean();
+            }
+
+            thisItem.classList.add("open");
+            thisItem.classList.add("show");
+            const cardItemClass= thisItem.children[0].classList[1];
+            cardsOpenArray.push(cardItemClass);
+            //console.log(cardsOpenArray);
+            //console.log("arrayOpenLength1:" + cardsOpenArray.length );
+
+            //Pair of Cards Actions
+            //Match or NotMatch into the Open Cards Array 
+            //If Match, Add Card to an Match Array
+
+            if ( cardsOpenArray.length === 2)  {
+                
+                movements += 1;
+                console.log("movements:"+ movements);               
+                if ( cardsOpenArray[0] === cardsOpenArray[1] ) {               
+                        //console.log("match!");
+                        const cardsMatch = document.querySelectorAll(".open");   
+                        for (cardMatch of cardsMatch) {
+                            cardMatch.classList.toggle("match", true);
+                        } 
+                        cardsMatchArray.push(cardsOpenArray[0]);               
+                } else {
+                        //console.log("nomatch");
+                }
+
+                //Delete cardsOpenArray
+                cardsOpenArray.splice(0, 2);
+
+            }
+      
         }
 
-
+   
+        console.log(cardsMatchArray.length);
         //Open the Congratulations PopUp
         if ( cardsMatchArray.length  === cardsMatchNumber ) {
             console.log("wines in:" + movements);
