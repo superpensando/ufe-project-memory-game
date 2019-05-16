@@ -89,7 +89,8 @@ function cardClean() {
     const deckCards = document.querySelectorAll(".card");
     for (const deckCard of deckCards) {
         deckCard.classList.remove("show");
-        deckCard.classList.remove("open");  
+        deckCard.classList.remove("open");
+        deckCard.classList.remove("notmatch");
     }
 }
 
@@ -121,15 +122,17 @@ function cardOpenMatch(thisItem,event) {
             if ( cardsOpenArray.length === 2)  {
                 
                 movements += 1;
-                if ( cardsOpenArray[0] === cardsOpenArray[1] ) {               
-                        //console.log("match!");
-                        const cardsMatch = document.querySelectorAll(".open");   
-                        for (cardMatch of cardsMatch) {
-                            cardMatch.classList.toggle("match", true);
-                        } 
-                        cardsMatchArray.push(cardsOpenArray[0]);               
-                } else {
-                        //console.log("nomatch");
+
+                const cardsMatch = document.querySelectorAll(".open");
+                if ( cardsOpenArray[0] === cardsOpenArray[1] ) {                                        
+                    for (cardMatch of cardsMatch) {
+                        cardMatch.classList.add("match");
+                    } 
+                    cardsMatchArray.push(cardsOpenArray[0]);                                      
+                } else {  
+                    for (cardMatch of cardsMatch) {
+                        cardMatch.classList.add("notmatch");
+                    } 
                 }
 
                 //Delete cardsOpenArray
@@ -148,7 +151,7 @@ function cardOpenMatch(thisItem,event) {
                 const modal = document.querySelector(".modal-content");
                 modal.classList.toggle("hide", false);
 
-                //Moves
+                //Move Counter
                 const moves = document.querySelector(".moves");
                 moves.classList.toggle("hide", false);
                 moves.textContent = movements; 
@@ -158,7 +161,7 @@ function cardOpenMatch(thisItem,event) {
                 const timer = document.querySelector(".timer");
                 timer.textContent = ((t1-t0)/1000).toFixed(2) + " s"; 
                 
-                //Rating 
+                //Star Rating 
                 if ( movements > 20 ) {
                     const rating3 = document.querySelector(".fa-star-three");
                     rating3.classList.add("offstars");
@@ -172,7 +175,7 @@ function cardOpenMatch(thisItem,event) {
                     rating1.classList.add("offstars");
                 }   
                           
-            }, 2000); 
+            }, 1000); 
 
         }
     }
